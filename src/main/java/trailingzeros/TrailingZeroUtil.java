@@ -9,7 +9,7 @@ public class TrailingZeroUtil {
     private static final long ZERO2 = 100L;
     private static final long ZERO1 = 10L;
 
-    private static int countByMode(long value) {
+    public static int countByMode(long value) {
         if (value == 0L) {
             return 1;
         }
@@ -63,7 +63,7 @@ public class TrailingZeroUtil {
         if (idx + 1 < s.length()) { // not the last char
             return 0;
         }
-        idx = s.indexOf("0"); // fixme: two loops here!
+        idx = s.indexOf("0"); // fixme: not correct answer! wrong if value = 1000_1231_1000L
         return s.length() - idx;
     }
 
@@ -76,12 +76,7 @@ public class TrailingZeroUtil {
     }
 
     public static void main(String[] args) {
-//        int i = 0xFF00;
-//        int i = 1280000;
-//        System.out.printf("%x\n", i);
-//        System.out.println("value is " + i);
-//        System.out.println(Long.numberOfTrailingZeros(i));
-        long[] testCase = {0xFF, 100, 128, 512, 1000_0000, 1000_0000_0000L, 1001_6688L, Long.MAX_VALUE};
+        long[] testCase = {0xFF, 100, 128, 512, 1000_0000, 1000_0000_0000L, 1001_6688L, Long.MAX_VALUE, 1000_1231_1000L};
         System.out.println("count by mode:");
         run(testCase, i -> {
             System.out.printf("\t%d has %d zero(s)\n", i, countByMode(i));
