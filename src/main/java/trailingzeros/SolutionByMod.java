@@ -1,15 +1,28 @@
 package trailingzeros;
 
-import java.util.function.LongConsumer;
+import java.util.Arrays;
+import java.util.stream.LongStream;
 
-public class TrailingZeroUtil {
+/**
+ * 使用Mod的方法，遍历1～x（x是阶乘的终点🏁）
+ * 每次乘法之后，除掉后面的0
+ * <p>
+ * 问题：这么做容易overflow了
+ */
+public class SolutionByMod {
     private static final long ZERO16 = 1_0000_0000_0000_0000L;
     private static final long ZERO8 = 1_0000_0000L;
     private static final long ZERO4 = 1_0000L;
     private static final long ZERO2 = 100L;
     private static final long ZERO1 = 10L;
 
-    private static int countByMode(long value) {
+    public static class ProductAndZeros {
+        public long Product = 1L;
+        public long zeros = 0L;
+    }
+
+    private static int countByMode(ProductAndZeros pz) {
+        long value = pz.Product;
         if (value == 0L) {
             return 1;
         }
@@ -47,43 +60,42 @@ public class TrailingZeroUtil {
         if (value >= ZERO1) {
             y = value % ZERO1;
             if (y == 0L) {
-//                value /= ZERO1;
+                value /= ZERO1;
                 n += 1;
             }
         }
+        pz.Product = value;
+        pz.zeros += n;
         return n;
     }
 
-    private static int countInStr(long value) {
-        String s = String.valueOf(value);
-        int idx = s.lastIndexOf("0");
-        if (idx == -1) {
-            return 0;
+    public static long trailingZeros(long v) {
+        if (v == 1L) {
+            return 0L;
         }
-        if (idx + 1 < s.length()) { // not the last char
-            return 0;
+        ProductAndZeros pz = new ProductAndZeros();
+        for (long i = 2; i <= v; i++) {
+            pz.Product *= i;
+            long n = countByMode(pz);
+//            System.out.println(n);
         }
-        idx = s.indexOf("0"); // fixme: not correct answer! wrong if value = 1000_1231_1000L
-        return s.length() - idx;
-    }
-
-    private static void run(long[] testCase, LongConsumer calFunc, int times) {
-        for (int i = 0; i < times; i++) {
-            for (long aTestCase : testCase) {
-                calFunc.accept(aTestCase);
-            }
-        }
+        return pz.zeros;
     }
 
     public static void main(String[] args) {
-        long[] testCase = {0xFF, 100, 128, 512, 1000_0000, 1000_0000_0000L, 1001_6688L, Long.MAX_VALUE, 1000_1231_1000L};
-        System.out.println("count by mode:");
-        run(testCase, i -> {
-            System.out.printf("\t%d has %d zero(s)\n", i, countByMode(i));
-        }, 1);
-        System.out.println("count in str:");
-        run(testCase, i -> {
-            System.out.printf("\t%d has %d zero(s)\n", i, countInStr(i));
-        }, 1);
+        long[] testCase = {
+                0xFF,
+                100,
+                128,
+                512,
+                1000_0000,
+                1000_0000_0000L,
+                1001_6688L,
+                Long.MAX_VALUE,
+                1000_1231_1000L};
+        LongStream.of(testCase).forEach(it -> {
+            System.out.printf("\t%d has %d zero(s)\n",
+                    it, trailingZeros(it));
+        });
     }
 }
