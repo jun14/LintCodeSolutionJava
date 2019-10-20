@@ -1,5 +1,6 @@
 package trailingzeros;
 
+import java.util.HashMap;
 import java.util.function.LongConsumer;
 
 public class TrailingZeroUtil {
@@ -85,5 +86,19 @@ public class TrailingZeroUtil {
         run(testCase, i -> {
             System.out.printf("\t%d has %d zero(s)\n", i, countInStr(i));
         }, 1);
+
+        long fives = 5;
+        long i = fives;
+        long powerTimes = 1;
+
+        while (i*5 > i) {
+            i *= fives;
+            System.out.println(i);
+        }
+
+        System.out.println(131 / 5);
     }
 }
+
+
+

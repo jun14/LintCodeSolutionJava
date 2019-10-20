@@ -1,55 +1,32 @@
 package trailingzeros;
 
-import java.util.HashMap;
 import java.util.stream.LongStream;
 
 /**
  * 5! = 1 * 2 * 3 * 4 * 5 = 120
- * 13! = 1 2 3 4 5 6 7 8 9 10 11 12 13
+ * 25! = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+ * 25 / 5 = 5
+ * 25 / 25 = 1
+ * 5 + 1 = 6
+ * <p>
+ * 130! = 5 10 15 20 25 30 35 40 45 50 55 60 65 70 ... 120 125 130
+ * 130 / 5 = 26
+ * 130 / 25 = 5.?
+ * 130 / 125 = 1.?
+ * 26 + 5 + 1 = 32
  * 数一数有多少个5和2，取他们之间的较小值
  */
 public class Solution {
-    private static HashMap<Long, Integer> fives = new HashMap<Long, Integer>();
-//    private static HashMap<Long, Integer> twos = new HashMap<Long, Integer>();
-
-    private static int count5s(long n) {
-        Integer n5 = fives.get(n);
-        if (n5 != null) {
-            return n5;
-        }
-        n5 = 0;
-        while (n >= 5 && n % 5 == 0) {
-            n /= 5;
-            n5++;
-        }
-        fives.put(n, n5);
-        return n5;
-    }
-
-//    private static int count2s(long n) {
-//        Integer n2 = twos.get(n);
-//        if (n2 != null) {
-//            return n2;
-//        }
-//        n2 = 0;
-//        while (n >= 2 && n % 2 == 0) {
-//            n /= 2;
-//            n2++;
-//        }
-//        twos.put(n, n2);
-//        return n2;
-//    }
 
     public static long trailingZeros(long n) {
-        // write your code here, try to do it without arithmetic operators.
-//        int n2 = 0;
-        int n5 = 0;
-        for (long i = 1; i <= n; i++) {
-//            n2 += count2s(i);
-            n5 += count5s(i);
+        long five = 5L;
+        long zeros = 0L;
+        while (n >= five
+                && five * 5 > five) { // incase long value overflow
+            zeros += n / five;
+            five *= 5;
         }
-//        return Math.min(n2, n5);
-        return n5;
+        return zeros;
     }
 
     public static void main(String[] args) {
@@ -59,12 +36,12 @@ public class Solution {
                 100,
                 128,
                 512,
-                1001171717};
-//                1000_0000,
-//                1000_0000_0000L,
-//                1001_6688L,
-//                Long.MAX_VALUE,
-//                1000_1231_1000L};
+                1001171717,
+                1000_0000,
+                1000_0000_0000L,
+                1001_6688L,
+                Long.MAX_VALUE,
+                1000_1231_1000L};
         LongStream.of(testCase).forEach(it -> {
             System.out.printf("\t%d has %d zero(s)\n",
                     it, trailingZeros(it));
